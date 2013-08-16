@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sample Gallery Page</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="js/gallery.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$gallery = $("#gallery");
+				gallery = makeGallery($gallery);
+				gallery.next();
+				gallery.draw();
+			});
+		</script>
+	</head>
+	<body>
+		<canvas id="gallery" width="900" height="450">
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+			<img src="" width="0" height="0"/>
+		</canvas>
+	</body>
+</html>
