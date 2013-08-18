@@ -6,26 +6,26 @@
 		<script src="js/gallery.js"></script>
 		<script type="text/javascript">
 			$(function() {
-				$gallery = $("#gallery");
+				var $gallery = $("#gallery");
 				gallery = makeGallery($gallery);
-				gallery.next();
 				gallery.draw();
+				alert();
 			});
 		</script>
 	</head>
 	<body>
 		<canvas id="gallery" width="900" height="450">
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
-			<img src="" width="0" height="0"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
+			<img src="img/139.jpg" width="471" height="600"/>
 		</canvas>
+		<input type="button" value="prev" onclick="javascript:gallery.prev();"/>
+		<input type="button" value="next" onclick="javascript:gallery.next();"/>
 	</body>
 </html>

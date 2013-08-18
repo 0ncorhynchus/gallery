@@ -1,33 +1,88 @@
 var makeItem = function($img) {
-		var _src = $img.attr('src'),
-			_img_width = $img.attr('width'),
-			_img_height = $img.attr('height')
+		var _img = new Image(),
+			_img_width = parseInt($img.attr('width'),0),
+			_img_height = parseInt($img.attr('height'),0),
+			_ctx = undefined
+			_x =  undefined,
+			_y =  undefined,
 			that = {
 				width: 0,
 				height: 0,
+				dx: 0,
+				dy: 0,
+				dw: 0,
+				dh: 0,
+				updateSize: function() {
+					if (_img_width <= 0 || _img_height <= 0) return;
+					if (this.width * _img_height < this.height * _img_width) {
+						this.dw = this.width * 0.8;
+						this.dh = _img_height * this.dw / _img_width;
+					} else {
+						this.dh = this.height * 0.8;
+						this.dw = _img_width * this.dh / _img_height;
+					}
+					this.dx = (this.width - this.dw) / 2;
+					this.dy = (this.height - this.dh) / 2;
+				},
 				draw: function(ctx, x, y) {
-					ctx.strokeRect(x+5,y+5,this.width-10,this.height-10);
+					_ctx = ctx;
+					_x = x;
+					_y = y;
+					this.updateSize();
+					if (_img.complete) {
+						ctx.drawImage(_img,x+this.dx,y+this.dy,this.dw,this.dh);
+					}
+				},
+				isComplete: function() {
+					return _img.complete;
 				}
 			};
+		_img.src = $img.attr('src');
 		return that;
 	},
 	makeGallery = function($gallery){
 		var _items = [],
 			_index = 0,
-			_width = $gallery.attr('width'),
-			_height = $gallery.attr('height'),
+			_width = parseInt($gallery.attr('width'),0),
+			_height = parseInt($gallery.attr('height'),0),
 			ctx = $gallery[0].getContext('2d'),
 			_is_valid_index = function(index) {
 				return index >= 0 && index < _items.length;
 			},
+			draw = function(x,y,i) {
+				ctx.clearRect(0,0,_width,_height);
+				while (x <= _width && _is_valid_index(i)) {
+					_items[i].draw(ctx,x,y);
+					x += _items[i].width;
+					i++;
+				}
+			},
+			move = function(from,to,i) {
+				var x = from,
+					y = 0,
+					d = (to - from) / 25,
+					count = 0;
+				var timer = setInterval(function() {
+					if (count < 25) {
+						draw(x,y,i);
+						x += d;
+						count++;
+					} else {
+						clearInterval(timer);
+					}
+				},20);
+				draw(0,0,_index);
+			},
 			that = {
 				next: function() {
 					if (_is_valid_index(_index+1)) {
+						move(0,-_items[_index].width,_index);
 						_index++;
 					}
 				},
 				prev: function() {
 					if (_is_valid_index(_index-1)) {
+						move(-_items[_index-1].width,0,_index-1);
 						_index--;
 					}
 				},
@@ -36,14 +91,8 @@ var makeItem = function($img) {
 				},
 				draw: function() {
 					var x = 0,
-						y = 0,
-						i = _index;
-					while (x <= _width && _is_valid_index(i)) {
-						_items[i].draw(ctx,x,y);
-						x += _items[i].width;
-						i++;
-					}
-					ctx.strokeRect(0,0,_width,_height);
+						y = 0;
+					draw(x,y,_index);
 				}
 			};
 		$('img',$gallery).each(function() {
