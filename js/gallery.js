@@ -5,6 +5,7 @@ var makeItem = function($img) {
 			_ctx = undefined
 			_x =  undefined,
 			_y =  undefined,
+			_caption = $img.attr('caption'),
 			that = {
 				width: 0,
 				height: 0,
@@ -35,6 +36,9 @@ var makeItem = function($img) {
 				},
 				isComplete: function() {
 					return _img.complete;
+				},
+				getCaption: function() {
+					return _caption;
 				}
 			};
 		_img.src = $img.attr('src');
@@ -46,6 +50,7 @@ var makeItem = function($img) {
 			_width = parseInt($gallery.attr('width'),0),
 			_height = parseInt($gallery.attr('height'),0),
 			ctx = $gallery[0].getContext('2d'),
+			caption = null,
 			_is_valid_index = function(index) {
 				return index >= 0 && index < _items.length;
 			},
@@ -73,17 +78,24 @@ var makeItem = function($img) {
 				},20);
 				draw(0,0,_index);
 			},
+			update_caption = function(i) {
+				if (caption && _is_valid_index(i)) {
+					caption.text(_items[i].getCaption());
+				}
+			},
 			that = {
 				next: function() {
 					if (_is_valid_index(_index+1)) {
 						move(0,-_items[_index].width,_index);
 						_index++;
+						update_caption(_index);
 					}
 				},
 				prev: function() {
 					if (_is_valid_index(_index-1)) {
 						move(-_items[_index-1].width,0,_index-1);
 						_index--;
+						update_caption(_index);
 					}
 				},
 				index: function() {
@@ -93,6 +105,9 @@ var makeItem = function($img) {
 					var x = 0,
 						y = 0;
 					draw(x,y,_index);
+				},
+				set_caption: function($caption) {
+					caption = $caption;
 				}
 			};
 		$('img',$gallery).each(function() {

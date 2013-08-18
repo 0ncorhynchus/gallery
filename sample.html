@@ -2,30 +2,36 @@
 <html>
 	<head>
 		<title>Sample Gallery Page</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="js/gallery.js"></script>
 		<script type="text/javascript">
 			$(function() {
-				var $gallery = $("#gallery");
-				gallery = makeGallery($gallery);
-				gallery.draw();
-				alert();
+					var $gallery = $("#gallery"),
+						$caption = $("#caption");
+					gallery = makeGallery($gallery);
+					gallery.set_caption($caption);
+					gallery.draw();
+					alert("debug");
 			});
 		</script>
 	</head>
 	<body>
-		<canvas id="gallery" width="900" height="450">
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-			<img src="img/139.jpg" width="471" height="600"/>
-		</canvas>
-		<input type="button" value="prev" onclick="javascript:gallery.prev();"/>
-		<input type="button" value="next" onclick="javascript:gallery.next();"/>
+		<div class="gallery_base">
+			<canvas id="gallery" width="700" height="350">
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+				<img src="img/139.jpg" width="471" height="600" caption="イサク"/>
+			</canvas>
+			<p id="caption"></p>
+			<input type="button" value="＜" onclick="javascript:gallery.prev();"/>
+			<input type="button" value="＞" onclick="javascript:gallery.next();"/>
+		</div>
 	</body>
 </html>

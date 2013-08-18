@@ -1,0 +1,23 @@
+body {
+	text-align: center;
+	position: relative;
+	background-color: #000;
+}
+
+.gallery_base {
+	position: relative;
+	margin: auto;
+}
+
+#caption {
+	position: relative;
+	margin: auto;
+	width: 600px;
+	height: 100px;
+	color: #bbb;
+}
+
+input {
+	background-color: #000;
+	color: #bbb;
+}
