@@ -10,8 +10,8 @@
 			$(function() {
 					var $gallery = $("#gallery"),
 						$caption = $("#caption");
-					gallery = makeGallery($gallery);
-					gallery.set_caption($caption);
+					gallery = makeGallery($gallery, {});
+					//gallery.set_caption($caption);
 					gallery.draw();
 					alert("debug");
 			});
