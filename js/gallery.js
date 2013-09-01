@@ -100,10 +100,12 @@ var makeItem = function(src, img_width, img_height, alt) {
 						is_notice = true;
 						items[i].setSize(width, height);
 						items[i].draw(ctx, x, y);
+						return items[i].getCaption();
 					} else if (i == -1) {
 						is_notice = false;
 						this.setSize(width, height);
 						this.draw(ctx, x, y);
+						return "";
 					}
 				},
 			};
@@ -117,7 +119,8 @@ var makeItem = function(src, img_width, img_height, alt) {
 			ctx = $gallery[0].getContext('2d'),
 			col = 3,
 			row = 2,
-			is_moving = false;
+			caption,
+			is_moving = false,
 			is_valid_index = function(index) {
 				return index >= 0 && index < pages.length;
 			},
@@ -163,7 +166,8 @@ var makeItem = function(src, img_width, img_height, alt) {
 					y = e.pageY - $gallery.offset().top;
 				var i = pages[index].click(x, y);
 				if ( i != -2 ) {
-					pages[index].notice(i, ctx, 0, 0);
+					var notice = pages[index].notice(i, ctx, 0, 0);
+					caption.html(notice);
 				} 
 			},
 			that = {
@@ -187,6 +191,9 @@ var makeItem = function(src, img_width, img_height, alt) {
 						page.add(item);
 						pages.push(page);
 					}
+				},
+				setCaption: function($caption) {
+					caption = $caption;
 				}
 			};
 		$gallery.click(click);
