@@ -98,6 +98,7 @@ var makeItem = function(src, img_width, img_height, alt) {
 				notice: function(i, ctx, x, y) {
 					if(i >= 0 && i < items.length) {
 						is_notice = true;
+						// TODO
 						items[i].setSize(width, height);
 						items[i].draw(ctx, x, y);
 						return items[i].getCaption();
