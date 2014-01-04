@@ -4,7 +4,7 @@ body {
 	background-color: #000;
 }
 
-.gallery_base {
+#gallery_base {
 	position: relative;
 	margin: auto;
 }
