@@ -5,9 +5,11 @@ var makeItem = function(src, img_width, img_height, alt) {
 			width = 0,
 			height = 0,
 			dx, dy, dw, dh,
+			is_complete = false,
 			is_inside = function(x, y) {
 				return (x >= dx && x <= dx + dw && y >= dy && dy <= dy + dh);
 			},
+			timer = undefined,
 			that = {
 				setSize: function(w, h) {
 					width = w;
@@ -24,14 +26,30 @@ var makeItem = function(src, img_width, img_height, alt) {
 					dy = (height - dh) / 2;
 				},
 				draw: function(ctx, x, y) {
-					if (img.complete) {
+					if (img.complete)
+						is_complete = true;
+					if (is_complete) {
 						ctx.strokeStyle='rgb(255,255,255)';
 						ctx.strokeRect(x + dx, y + dy, dw, dh);
 						ctx.drawImage(img, x + dx, y + dy, dw, dh);
+						clearInterval(timer);
+						return;
 					}
+					timer = setInterval(function() {
+						if (img.complete) {
+							ctx.strokeStyle='rgb(255,255,255)';
+							ctx.strokeRect(x + dx, y + dy, dw, dh);
+							ctx.drawImage(img, x + dx, y + dy, dw, dh);
+							clearInterval(timer);
+							is_complete = true;
+						}
+					}, 50);
+				},
+				reset: function() {
+					clearInterval(timer);
 				},
 				isComplete: function() {
-					return img.complete;
+					return is_complete;
 				},
 				getCaption: function() {
 					return alt;
@@ -95,10 +113,17 @@ var makeItem = function(src, img_width, img_height, alt) {
 					}
 					return -2
 				},
+				reset: function() {
+					for (var i = 0; i < items.length; i++) {
+						items[i].reset();
+					}
+				},
 				notice: function(i, ctx, x, y) {
 					if(i >= 0 && i < items.length) {
 						is_notice = true;
-						// TODO
+						ctx.fillStyle = "rgba(30, 30, 30, 0.9)";
+						ctx.fillRect(x, y, width, height);
+						// TODO transparent background
 						items[i].setSize(width, height);
 						items[i].draw(ctx, x, y);
 						return items[i].getCaption();
@@ -134,31 +159,34 @@ var makeItem = function(src, img_width, img_height, alt) {
 					pages[index-1].draw(ctx, x-width, y);
 			},
 			move = function(to) {
-				if (!is_valid_index(to))
+				if (!is_valid_index(to)) {
+					draw(0, 0);
 					return;
+				}
 				var x = 0,
+					dx = 0,
 					y = 0,
-					d = (index - to) * width / 25,
+					interval = index - to,
 					count = 0;
 				is_moving = true;
 				var timer = setInterval(function() {
-					if (x >= width) {
+					if (x + dx > width / 2) {
 						index--;
 						x -= width;
-					} else if (x < 0) {
+					} else if (x + dx < width / (-2)) {
 						index++;
 						x += width;
 					}
 					if (count < 25) {
-						x += d;
-						draw(x,y);
+						dx = interval * width * count / 25;
+						draw(x + dx, y);
 						count++;
 					} else {
-						clearInterval(timer);
 						is_moving = false;
+						draw(0,0);
+						clearInterval(timer);
 					}
-				},20);
-				draw(0,0);
+				},500/25);
 			},
 			click = function(e) {
 				if (is_moving)
@@ -169,7 +197,9 @@ var makeItem = function(src, img_width, img_height, alt) {
 				if ( i != -2 ) {
 					var notice = pages[index].notice(i, ctx, 0, 0);
 					caption.html(notice);
-				} 
+				} else {
+					draw(0, 0);
+				}
 			},
 			that = {
 				next: function() {
@@ -207,3 +237,17 @@ var makeItem = function(src, img_width, img_height, alt) {
 		});
 		return that;
 	};
+
+$(function() {
+	sizing();
+	$(window).resize(function() {
+		sizing();
+	});
+});
+
+function sizing() {
+	var width = $("#gallery_base").width(),
+		height = Math.floor($("#gallery_base").height() * 0.8);
+	$("#gallery").attr({height:height});
+	$("#gallery").attr({width:width});
+}
