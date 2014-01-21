@@ -208,10 +208,14 @@ var makeItem = function(src, img_width, img_height, alt) {
 				next: function() {
 					if (pages[index].is_notice())
 						return;
+					if (is_moving)
+						return;
 					move(index+1);
 				},
 				prev: function() {
 					if (pages[index].is_notice())
+						return;
+					if (is_moving)
 						return;
 					move(index-1);
 				},
