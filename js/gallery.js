@@ -140,8 +140,12 @@ var makeItem = function(src, img_width, img_height, alt) {
 			ctx = $gallery[0].getContext('2d'),
 			col = 3,
 			row = 2,
-			caption,
+			caption = "",
 			is_moving = false,
+
+			queue = new Array(),
+			timer = undefined,
+
 			is_valid_index = function(index) {
 				return index >= 0 && index < pages.length;
 			},
@@ -162,28 +166,43 @@ var makeItem = function(src, img_width, img_height, alt) {
 				var x = 0,
 					dx = 0,
 					y = 0,
-					interval = index - to,
-					count = 0;
+					interval = index - to;
 				is_moving = true;
-				var timer = setInterval(function() {
-					if (x + dx > width / 2) {
-						index--;
-						x -= width;
-					} else if (x + dx < width / (-2)) {
-						index++;
-						x += width;
-					}
-					if (count < 25) {
-						dx = interval * width * count / 25;
-						draw(x + dx, y);
-						count++;
-					} else {
+
+				for (var i = 0; i < 20; i++) {
+					queue.push({
+						term: 25,
+						dx: interval * width * i / 20.,
+						fire: function() {
+							if (x + this.dx > width / 2) {
+								index--;
+								x -= width;
+							} else if(x + this.dx < width / (-2)) {
+								index++;
+								x += width;
+							}
+							draw(x + this.dx, y);
+						}
+					});
+				}
+				queue.push({
+					term: 25,
+					fire: function() {
 						is_moving = false;
 						draw(0,0);
-						clearInterval(timer);
 					}
-				},500/25);
+				});
+				that.start();
 			},
+			fire = function() {
+				clearInterval(timer);
+				timer = undefined;
+				var item = queue.shift();
+				if (item)
+					item.fire();
+				if (queue[0])
+					timer = setInterval(fire, queue[0].term);
+			}
 			click = function(e) {
 				if (is_moving)
 					return;
@@ -227,6 +246,10 @@ var makeItem = function(src, img_width, img_height, alt) {
 				},
 				setCaption: function($caption) {
 					caption = $caption;
+				},
+				start: function() {
+					if (!timer)
+						fire();
 				}
 			};
 		$gallery.click(click);
