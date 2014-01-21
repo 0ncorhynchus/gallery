@@ -142,12 +142,23 @@ var makeItem = function(src, img_width, img_height, alt) {
 			row = 2,
 			caption = "",
 			is_moving = false,
+			is_initialized = false,
 
 			queue = new Array(),
 			timer = undefined,
 
 			is_valid_index = function(index) {
 				return index >= 0 && index < pages.length;
+			},
+			initialize = function() {
+				timer = setInterval(function() {
+					if (pages[index].is_complete()) {
+						draw(0,0);
+						is_initialized = true;
+						clearInterval(timer);
+						timer = undefined;
+					}
+				}, 25);
 			},
 			draw = function(x,y) {
 				if (pages[index])
@@ -170,7 +181,7 @@ var makeItem = function(src, img_width, img_height, alt) {
 				is_moving = true;
 
 				for (var i = 0; i < 20; i++) {
-					queue.push({
+					push({
 						term: 25,
 						dx: interval * width * i / 20.,
 						fire: function() {
@@ -185,7 +196,7 @@ var makeItem = function(src, img_width, img_height, alt) {
 						}
 					});
 				}
-				queue.push({
+				push({
 					term: 25,
 					fire: function() {
 						is_moving = false;
@@ -202,6 +213,11 @@ var makeItem = function(src, img_width, img_height, alt) {
 					item.fire();
 				if (queue[0])
 					timer = setInterval(fire, queue[0].term);
+			},
+			push = function(item) {
+				if (is_initialized) {
+					queue.push(item);
+				}
 			}
 			click = function(e) {
 				if (is_moving)
@@ -217,6 +233,9 @@ var makeItem = function(src, img_width, img_height, alt) {
 				}
 			},
 			that = {
+				init: function() {
+					initialize();
+				},
 				next: function() {
 					if (pages[index].is_notice() || is_moving)
 						return;
@@ -248,7 +267,7 @@ var makeItem = function(src, img_width, img_height, alt) {
 					caption = $caption;
 				},
 				start: function() {
-					if (!timer)
+					if (!timer && is_initialized)
 						fire();
 				}
 			};
