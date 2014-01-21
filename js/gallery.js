@@ -5,6 +5,7 @@ var makeItem = function(src, img_width, img_height, alt) {
 			width = 0,
 			height = 0,
 			dx, dy, dw, dh,
+			is_complete = false,
 			is_inside = function(x, y) {
 				return (x >= dx && x <= dx + dw && y >= dy && dy <= dy + dh);
 			},
@@ -25,13 +26,30 @@ var makeItem = function(src, img_width, img_height, alt) {
 					dy = (height - dh) / 2;
 				},
 				draw: function(ctx, x, y) {
-					ctx.strokeStyle='rgb(255,255,255)';
-					ctx.drawImage(img, x + dx, y + dy, dw, dh);
-					ctx.strokeRect(x + dx, y + dy, dw, dh);
-					clearInterval(timer);
+					if (img.complete)
+						is_complete = true;
+					if (is_complete) {
+						ctx.strokeStyle='rgb(255,255,255)';
+						ctx.drawImage(img, x + dx, y + dy, dw, dh);
+						ctx.strokeRect(x + dx, y + dy, dw, dh);
+						clearInterval(timer);
+						return;
+					}
+					timer = setInterval(function() {
+						if (img.complete) {
+							ctx.strokeStyle='rgb(255,255,255)';
+							ctx.drawImage(img, x + dx, y + dy, dw, dh);
+							ctx.strokeRect(x + dx, y + dy, dw, dh);
+							clearInterval(timer);
+							is_complete = true;
+						}
+					}, 50);
 				},
 				reset: function() {
 					clearInterval(timer);
+				},
+				is_complete: function() {
+					return is_complete;
 				},
 				getCaption: function() {
 					return alt;
@@ -118,6 +136,13 @@ var makeItem = function(src, img_width, img_height, alt) {
 				},
 				is_notice: function() {
 					return is_notice;
+				},
+				is_complete: function() {
+					for (var i = 0; i < items.length; i+=1) {
+						if (!items[i].is_complete())
+							return false;
+					}
+					return true;
 				}
 			};
 		return that;
@@ -136,11 +161,13 @@ var makeItem = function(src, img_width, img_height, alt) {
 				return index >= 0 && index < pages.length;
 			},
 			draw = function(x,y) {
+				if (!pages[index].is_complete)
+					return;
 				if (pages[index])
 					pages[index].draw(ctx, x, y);
-				if (x < 0 && pages[index+1])
+				if (x < 0 && pages[index+1] && pages[index+1].is_complete())
 					pages[index+1].draw(ctx, x+width, y);
-				if (x > 0 && pages[index-1])
+				if (x > 0 && pages[index-1] && pages[index-1].is_complete())
 					pages[index-1].draw(ctx, x-width, y);
 			},
 			move = function(to) {
