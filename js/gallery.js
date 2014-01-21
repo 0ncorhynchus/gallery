@@ -8,7 +8,6 @@ var makeItem = function(src, img_width, img_height, alt) {
 			is_inside = function(x, y) {
 				return (x >= dx && x <= dx + dw && y >= dy && dy <= dy + dh);
 			},
-			timer = undefined,
 			that = {
 				setSize: function(w, h) {
 					width = w;
@@ -28,10 +27,6 @@ var makeItem = function(src, img_width, img_height, alt) {
 					ctx.strokeStyle='rgb(255,255,255)';
 					ctx.drawImage(img, x + dx, y + dy, dw, dh);
 					ctx.strokeRect(x + dx, y + dy, dw, dh);
-					clearInterval(timer);
-				},
-				reset: function() {
-					clearInterval(timer);
 				},
 				is_complete: function() {
 					return img.complete;
@@ -98,11 +93,6 @@ var makeItem = function(src, img_width, img_height, alt) {
 					}
 					return -2
 				},
-				reset: function() {
-					for (var i = 0; i < items.length; i++) {
-						items[i].reset();
-					}
-				},
 				notice: function(i, ctx, x, y) {
 					if(i >= 0 && i < items.length) {
 						is_notice = true;
@@ -151,10 +141,12 @@ var makeItem = function(src, img_width, img_height, alt) {
 				return index >= 0 && index < pages.length;
 			},
 			initialize = function() {
+				if (!pages[index])
+					return;
 				timer = setInterval(function() {
 					if (pages[index].is_complete()) {
-						draw(0,0);
 						is_initialized = true;
+						draw(0,0);
 						clearInterval(timer);
 						timer = undefined;
 					}
