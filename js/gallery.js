@@ -134,6 +134,9 @@ var makeItem = function(src, img_width, img_height, alt) {
 						return "";
 					}
 				},
+				is_notice: function() {
+					return is_notice;
+				}
 			};
 		return that;
 	},
@@ -203,9 +206,13 @@ var makeItem = function(src, img_width, img_height, alt) {
 			},
 			that = {
 				next: function() {
+					if (pages[index].is_notice())
+						return;
 					move(index+1);
 				},
 				prev: function() {
+					if (pages[index].is_notice())
+						return;
 					move(index-1);
 				},
 				index: function() {
