@@ -30,16 +30,16 @@ var makeItem = function(src, img_width, img_height, alt) {
 						is_complete = true;
 					if (is_complete) {
 						ctx.strokeStyle='rgb(255,255,255)';
-						ctx.strokeRect(x + dx, y + dy, dw, dh);
 						ctx.drawImage(img, x + dx, y + dy, dw, dh);
+						ctx.strokeRect(x + dx, y + dy, dw, dh);
 						clearInterval(timer);
 						return;
 					}
 					timer = setInterval(function() {
 						if (img.complete) {
 							ctx.strokeStyle='rgb(255,255,255)';
-							ctx.strokeRect(x + dx, y + dy, dw, dh);
 							ctx.drawImage(img, x + dx, y + dy, dw, dh);
+							ctx.strokeRect(x + dx, y + dy, dw, dh);
 							clearInterval(timer);
 							is_complete = true;
 						}
