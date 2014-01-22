@@ -12,27 +12,29 @@
 					var $gallery = $("#gallery"),
 						$caption = $("#caption");
 					gallery = makeGallery($gallery, {});
-					gallery.setCaption($caption);
+					gallery.set_caption($caption);
+					var $base = $("#gallery_base"),
+						width = $base.width(),
+						height = $base.height();
+					gallery.set_base($("body"));
 					gallery.init();
 			});
 		</script>
 	</head>
 	<body>
-		<div id="gallery_base">
-			<canvas id="gallery" width="900" height="450">
-				<img src="img/1.jpg" width="396" height="500" alt="1"/>
-				<img src="img/2.jpg" width="382" height="500" alt="2"/>
-				<img src="img/3.jpg" width="627" height="500" alt="3"/>
-				<img src="img/4.jpg" width="365" height="500" alt="4"/>
-				<img src="img/5.jpg" width="396" height="500" alt="5"/>
-				<img src="img/6.jpg" width="645" height="500" alt="6"/>
-				<img src="img/7.jpg" width="406" height="500" alt="7"/>
-				<img src="img/8.jpg" width="419" height="500" alt="8"/>
-				<img src="img/9.jpg" width="416" height="500" alt="9"/>
-			</canvas>
+		<canvas id="gallery" width="900" height="450">
+			<img src="img/1.jpg" width="396" height="500" alt="1"/>
+			<img src="img/2.jpg" width="382" height="500" alt="2"/>
+			<img src="img/3.jpg" width="627" height="500" alt="3"/>
+			<img src="img/4.jpg" width="365" height="500" alt="4"/>
+			<img src="img/5.jpg" width="396" height="500" alt="5"/>
+			<img src="img/6.jpg" width="645" height="500" alt="6"/>
+			<img src="img/7.jpg" width="406" height="500" alt="7"/>
+			<img src="img/8.jpg" width="419" height="500" alt="8"/>
+			<img src="img/9.jpg" width="416" height="500" alt="9"/>
+		</canvas>
+		<div id="container">
 			<p id="caption"></p>
-			<input type="button" value="＜" onclick="javascript:gallery.prev();"/>
-			<input type="button" value="＞" onclick="javascript:gallery.next();"/>
 		</div>
 	</body>
 </html>
