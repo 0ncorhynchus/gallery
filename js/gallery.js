@@ -45,10 +45,12 @@ var makeItem = function(src, img_width, img_height, caption) {
 							ddy = (h - ddh) / 2;
 						ctx.drawImage(img, x + ddx, y + ddy, ddw, ddh);
 						ctx.strokeStyle='rgb(255,255,255)';
+						ctx.lineWidth = 1.0;
 						ctx.strokeRect(x + ddx, y + ddy, ddw, ddh);
 					} else {
 						ctx.drawImage(img, x + dx, y + dy, dw, dh);
 						ctx.strokeStyle='rgb(255,255,255)';
+						ctx.lineWidth = 1.0;
 						ctx.strokeRect(x + dx, y + dy, dw, dh);
 					}
 				},
@@ -198,6 +200,7 @@ var makeItem = function(src, img_width, img_height, caption) {
 							var cx = width*0.05,
 								cy = height * 0.5;
 							ctx.strokeStyle = "#bbb";
+							ctx.lineWidth = 2.0;
 							ctx.beginPath();
 							ctx.moveTo(cx+5, cy-10);
 							ctx.lineTo(cx-5, cy);
@@ -212,6 +215,7 @@ var makeItem = function(src, img_width, img_height, caption) {
 							var cx = width*0.95,
 								cy = height * 0.5;
 							ctx.strokeStyle = "#bbb";
+							ctx.lineWidth = 2.0;
 							ctx.beginPath();
 							ctx.moveTo(cx-5, cy-10);
 							ctx.lineTo(cx+5, cy);
