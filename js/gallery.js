@@ -190,9 +190,11 @@ var makeItem = function(src, img_width, img_height, caption) {
 						if ($caption !== undefined) {
 							$caption.hide();
 						}
-						if (on_left && index>=1) {
-							ctx.fillStyle = "rgba(30, 30, 30, 0.7)";
-							ctx.fillRect(x, y, width*0.1, height);
+						if (index>=1) {
+							if (on_left){
+								ctx.fillStyle = "rgba(30, 30, 30, 0.7)";
+								ctx.fillRect(x, y, width*0.1, height);
+							}
 							var cx = width*0.05,
 								cy = height * 0.5;
 							ctx.strokeStyle = "#bbb";
@@ -201,9 +203,11 @@ var makeItem = function(src, img_width, img_height, caption) {
 							ctx.lineTo(cx-5, cy);
 							ctx.lineTo(cx+5, cy+10);
 							ctx.stroke();
-						} else if (on_right && index<pages.length-1) {
-							ctx.fillStyle = "rgba(30, 30, 30, 0.7)";
-							ctx.fillRect(x+width*0.9, y, width*0.1, height);
+						} else if (index<pages.length-1) {
+							if (on_right) {
+								ctx.fillStyle = "rgba(30, 30, 30, 0.7)";
+								ctx.fillRect(x+width*0.9, y, width*0.1, height);
+							}
 							var cx = width*0.95,
 								cy = height * 0.5;
 							ctx.strokeStyle = "#bbb";
@@ -375,9 +379,6 @@ var makeItem = function(src, img_width, img_height, caption) {
 				set_base: function($new_base) {
 					$base = $new_base;
 					resize($base.innerWidth(), $base.innerHeight());
-					$base.resize(function() {
-						resize($(this).innerWidth(), $(this).innerHeight());
-					});
 				},
 				start: function() {
 					if (!timer && is_initialized)
@@ -392,5 +393,13 @@ var makeItem = function(src, img_width, img_height, caption) {
 				alt = $(this).attr('alt');
 			that.add(src, width, height, alt);
 		});
+
+		$(window).resize(function() {
+			if($base) {
+				resize($base.innerWidth(), $base.innerHeight());
+				that.draw();
+			}
+		});
+
 		return that;
 	};
