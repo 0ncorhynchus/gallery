@@ -203,7 +203,8 @@ var makeItem = function(src, img_width, img_height, caption) {
 							ctx.lineTo(cx-5, cy);
 							ctx.lineTo(cx+5, cy+10);
 							ctx.stroke();
-						} else if (index<pages.length-1) {
+						}
+						if (index<pages.length-1) {
 							if (on_right) {
 								ctx.fillStyle = "rgba(30, 30, 30, 0.7)";
 								ctx.fillRect(x+width*0.9, y, width*0.1, height);
