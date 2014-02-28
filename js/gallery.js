@@ -237,7 +237,8 @@ var makeItem = function(src, img_width, img_height, caption) {
 					$ncanvas.show();
 				nctx.fillStyle = "rgba(30, 30, 30, 0.9)";
 				nctx.fillRect(x, y, nwidth, nheight);
-				n.draw(nctx,0,0,nwidth,nheight);
+				n.draw(nctx,nwidth*0.05,nheight*0.05,
+						nwidth*0.9,nheight*0.9);
 				if ($caption !== undefined) {
 					$caption.html(n.get_caption());
 					$caption.show();
@@ -502,6 +503,9 @@ var makeItem = function(src, img_width, img_height, caption) {
 					nwidth = parseInt($ncanvas.attr('width'),0);
 					nheight = parseInt($ncanvas.attr('height'),0);
 					nctx = $ncanvas[0].getContext('2d');
+					if ($ncanvas != $gallery) {
+						$ncanvas.hide();
+					}
 				},
 				start: function() {
 					if (!timer && is_initialized)
