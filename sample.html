@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Sample Gallery Page</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Sample Gallery Page</title> <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<link rel="stylesheet" type="text/css" href="css/color.css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -10,28 +9,28 @@
 		<script type="text/javascript">
 			$(function() {
 					var $gallery = $("#gallery"),
-						$caption = $("#caption");
+						$caption = $("#caption"),
+						$notice = $("#notice");
 					gallery = makeGallery($gallery, {});
 					gallery.set_caption($caption);
-					var $base = $("#gallery_base"),
-						width = $base.width(),
-						height = $base.height();
-					gallery.set_base($("body"));
+					gallery.set_expansion_canvas($notice);
 					gallery.init();
 			});
 		</script>
 	</head>
 	<body>
 		<canvas id="gallery" width="900" height="450">
-			<img src="img/1.jpg" width="396" height="500" alt="1"/>
-			<img src="img/2.jpg" width="382" height="500" alt="2"/>
-			<img src="img/3.jpg" width="627" height="500" alt="3"/>
-			<img src="img/4.jpg" width="365" height="500" alt="4"/>
-			<img src="img/5.jpg" width="396" height="500" alt="5"/>
-			<img src="img/6.jpg" width="645" height="500" alt="6"/>
-			<img src="img/7.jpg" width="406" height="500" alt="7"/>
-			<img src="img/8.jpg" width="419" height="500" alt="8"/>
-			<img src="img/9.jpg" width="416" height="500" alt="9"/>
+			<img src="img/1.jpg" width="313" height="400" alt="1"/>
+			<img src="img/2.jpg" width="273" height="400" alt="2"/>
+			<img src="img/3.jpg" width="317" height="400" alt="3"/>
+			<img src="img/4.jpg" width="308" height="400" alt="4"/>
+			<img src="img/5.jpg" width="319" height="400" alt="5"/>
+			<img src="img/6.jpg" width="330" height="400" alt="6"/>
+			<img src="img/7.jpg" width="342" height="400" alt="7"/>
+			<img src="img/8.jpg" width="333" height="400" alt="8"/>
+			<img src="img/9.jpg" width="292" height="400" alt="9"/>
+		</canvas>
+		<canvas id="notice" width="1600" height="700" style="display: none">
 		</canvas>
 		<div id="container">
 			<p id="caption"></p>
