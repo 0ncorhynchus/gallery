@@ -237,8 +237,8 @@ var makeItem = function(src, img_width, img_height, caption) {
 					$ncanvas.show();
 				nctx.fillStyle = "rgba(30, 30, 30, 0.9)";
 				nctx.fillRect(x, y, nwidth, nheight);
-				n.draw(nctx,nwidth*0.05,nheight*0.05,
-						nwidth*0.9,nheight*0.9);
+				n.draw(nctx,nwidth*0.1,0,
+						nwidth*0.8,nheight-100);
 				if ($caption !== undefined) {
 					$caption.html(n.get_caption());
 					$caption.show();
