@@ -1,31 +1,31 @@
 html, body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-	position: relative;
+    position: relative;
 }
 
 body > * {
-	position: absolute;
+    position: absolute;
 }
 
 #container {
-	position: absolute;
-	width: 600px;
-	margin: 0 0 0 -300px;
-	left: 50%;
-	bottom: 0;
-	text-align: center;
+    position: absolute;
+    width: 600px;
+    margin: 0 0 0 -300px;
+    left: 50%;
+    bottom: 0;
+    text-align: center;
 }
 
 #caption {
-	position: relative;
-	width: 100%;
-	height: 100px;
-	display: none;
+    position: relative;
+    width: 100%;
+    height: 100px;
+    display: none;
 }
 
