@@ -40,6 +40,10 @@ var makeItem = function(src, img_width, img_height, caption) {
                             ddh = h * 0.9;
                             ddw = img_width * ddh / img_height;
                         }
+                        if (ddw > img_width || ddh > img_height) {
+                            ddw = img_width;
+                            ddh = img_height;
+                        }
 
                         var ddx = (w - ddw) / 2,
                             ddy = (h - ddh) / 2;
