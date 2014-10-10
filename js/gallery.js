@@ -1,15 +1,37 @@
-var makeItem = function(src, img_width, img_height, caption) {
+var makeItem = function(src, caption) {
         var img = new Image(),
-            img_width = parseInt(img_width,0),
-            img_height = parseInt(img_height,0),
             width = 0,
             height = 0,
             dx, dy, dw, dh;
 
-        img.src = src;
+        var origin_width = function() {
+            if (typeof img.naturalWidth !== 'undefined')
+                return img.naturalWidth;
+            if (typeof img.runtimeStyle !== 'undefined') {
+                var run = img.runtimeStyle;
+                var mem = run.width;
+                run.width = 'auto';
+                w = img.width;
+                run.width = mem;
+                return w;
+            }
+            return img.width;
+        };
+        var origin_height = function() {
+            if (typeof img.naturalHeight !== 'undefined')
+                return img.naturalHeight;
+            if (typeof img.runtimeStyle !== 'undefined') {
+                var run = img.runtimeStyle;
+                var mem = run.height;
+                run.height = 'auto';
+                w = img.height;
+                run.height = mem;
+                return w;
+            }
+            return img.height;
+        };
 
-        if (img_width <= 0 || img_height <= 0)
-            return;
+        img.src = src;
 
         var is_inside = function(x, y) {
                 return (x >= dx && x <= dx + dw && y >= dy && dy <= dy + dh);
@@ -19,12 +41,12 @@ var makeItem = function(src, img_width, img_height, caption) {
                 set_size: function(w, h) {
                     width = w;
                     height = h;
-                    if (width * img_height < height * img_width) {
+                    if (width * origin_height() < height * origin_width()) {
                         dw = width * 0.9;
-                        dh = img_height * dw / img_width;
+                        dh = origin_height() * dw / origin_width();
                     } else {
                         dh = height * 0.9;
-                        dw = img_width * dh / img_height;
+                        dw = origin_width() * dh / origin_height();
                     }
 
                     dx = (width - dw) / 2;
@@ -33,12 +55,12 @@ var makeItem = function(src, img_width, img_height, caption) {
                 draw: function(ctx, x, y, w, h) {
                     if (w !== undefined && h !== undefined) {
                         var ddw, ddh;
-                        if (w * img_height < h * img_width) {
+                        if (w * origin_height() < h * origin_width()) {
                             ddw = w * 0.9;
-                            ddh = img_height * ddw / img_width;
+                            ddh = origin_height() * ddw / origin_width();
                         } else {
                             ddh = h * 0.9;
-                            ddw = img_width * ddh / img_height;
+                            ddw = origin_width() * ddh / origin_height();
                         }
 
                         var ddx = (w - ddw) / 2,
@@ -477,8 +499,8 @@ var makeItem = function(src, img_width, img_height, caption) {
                 draw: function() {
                     draw(0,0);
                 },
-                add: function(src, w, h, alt) {
-                    var item = makeItem(src, w, h, alt);
+                add: function(src, alt) {
+                    var item = makeItem(src, alt);
                     if (pages.length == 0 || !pages[pages.length-1].add(item)) {
                         var page = makePage(col, row);
                         page.set_size(width*0.8, height);
@@ -511,10 +533,8 @@ var makeItem = function(src, img_width, img_height, caption) {
 
         $('img',$gallery).each(function() {
             var src = $(this).attr('src'),
-                width = $(this).attr('width'),
-                height = $(this).attr('height'),
                 alt = $(this).attr('alt');
-            that.add(src, width, height, alt);
+            that.add(src, alt);
         });
 
         $(window).resize(function() {
