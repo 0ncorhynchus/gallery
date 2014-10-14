@@ -62,9 +62,9 @@ var makeItem = function(src, caption) {
                             ddh = h * 0.9;
                             ddw = origin_width() * ddh / origin_height();
                         }
-                        if (ddw > img_width || ddh > img_height) {
-                            ddw = img_width;
-                            ddh = img_height;
+                        if (ddw > origin_width() || ddh > origin_height()) {
+                            ddw = origin_width();
+                            ddh = origin_height();
                         }
 
                         var ddx = (w - ddw) / 2,
