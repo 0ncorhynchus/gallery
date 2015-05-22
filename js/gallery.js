@@ -2,7 +2,7 @@ var makeItem = function(src, caption) {
   var img = new Image(),
     width = 0,
     height = 0,
-    dx, dy, dw, dh;
+    rectangle = undefined;
 
   var origin_width = function() {
     if (typeof img.naturalWidth !== 'undefined')
@@ -34,13 +34,19 @@ var makeItem = function(src, caption) {
   img.src = src;
 
   var is_inside = function(x, y) {
-      return (x >= dx && x <= dx + dw && y >= dy && dy <= dy + dh);
-    };
+    if (rectangle === undefined)
+      return false;
+    return x >= rectangle.x && x < rectangle.x+rectangle.width &&
+      y >= rectangle.y && y < rectangle.y+rectangle.height;
+  };
 
   var that = {
-      set_size: function(w, h) {
+      draw: function(ctx, x, y, w, h) {
+        if (!img.complete)
+          return;
         width = w;
         height = h;
+        var dw, dh;
         if (width * origin_height() < height * origin_width()) {
           dw = width * 0.9;
           dh = origin_height() * dw / origin_width();
@@ -48,37 +54,19 @@ var makeItem = function(src, caption) {
           dh = height * 0.9;
           dw = origin_width() * dh / origin_height();
         }
+        rectangle = {
+          x     : (width - dw) / 2,
+          y     : (height - dh) / 2,
+          width : dw,
+          height: dh
+        };
 
-        dx = (width - dw) / 2;
-        dy = (height - dh) / 2;
-      },
-      draw: function(ctx, x, y, w, h) {
-        if (w !== undefined && h !== undefined) {
-          var ddw, ddh;
-          if (w * origin_height() < h * origin_width()) {
-            ddw = w * 0.9;
-            ddh = origin_height() * ddw / origin_width();
-          } else {
-            ddh = h * 0.9;
-            ddw = origin_width() * ddh / origin_height();
-          }
-          if (ddw > origin_width() || ddh > origin_height()) {
-            ddw = origin_width();
-            ddh = origin_height();
-          }
-
-          var ddx = (w - ddw) / 2,
-            ddy = (h - ddh) / 2;
-          ctx.drawImage(img, x + ddx, y + ddy, ddw, ddh);
-          ctx.strokeStyle='rgb(255,255,255)';
-          ctx.lineWidth = 1.0;
-          ctx.strokeRect(x + ddx, y + ddy, ddw, ddh);
-        } else {
-          ctx.drawImage(img, x + dx, y + dy, dw, dh);
-          ctx.strokeStyle='rgb(255,255,255)';
-          ctx.lineWidth = 1.0;
-          ctx.strokeRect(x + dx, y + dy, dw, dh);
-        }
+        ctx.drawImage(img, x + rectangle.x, y + rectangle.y,
+            rectangle.width, rectangle.height);
+        ctx.strokeStyle='rgb(255,255,255)';
+        ctx.lineWidth = 1.0;
+        ctx.strokeRect(x + rectangle.x, y + rectangle.y,
+            rectangle.width, rectangle.height);
       },
       is_complete: function() {
         return img.complete;
@@ -110,24 +98,16 @@ var makePage = function(col, row) {
       add: function(item) {
         if (items.length >= col * row)
           return false;
-        item.set_size(iw, ih);
         items.push(item);
         return true;
       },
-      set_size: function(w, h) {
-        width = w;
-        height = h;
-        iw = Math.floor(width / col);
-        ih = Math.floor(height / row);
-        for (var i = 0; i < items.length; i++) {
-          items[i].set_size(iw, ih);
-        }
-      },
-      draw: function(ctx, x, y) {
+      draw: function(ctx, x, y, width, height) {
+        var iw = Math.floor(width / col),
+            ih = Math.floor(height / row);
         for (var i = 0; i < items.length; i++) {
           var ix = (i%col) * iw + x,
-            iy = Math.floor(i/col) * ih + y;
-          items[i].draw(ctx, ix, iy);
+              iy = Math.floor(i/col) * ih + y;
+          items[i].draw(ctx, ix, iy, iw, ih);
         }
       },
       click: function(x, y) {
@@ -163,28 +143,28 @@ var makePage = function(col, row) {
 
 makeGallery = function($gallery, options){
   var pages = [],
-    index = 0,
-    width = parseInt($gallery.attr('width'),0),
-    height = parseInt($gallery.attr('height'),0),
-    ctx = $gallery[0].getContext('2d'),
-    col = 3,
-    row = 2,
-    $base = undefined,
-    $caption = undefined,
-    $ncanvas = $gallery,
-    nwidth = width,
-    nheight = height,
-    nctx = ctx,
-    nleft = false,
-    nright = false,
-    notice_ = -1,
-    is_moving = false,
-    is_initialized = false,
-    on_left = false,
-    on_right = false;
+      index = 0,
+      width = parseInt($gallery.attr('width'),0),
+      height = parseInt($gallery.attr('height'),0),
+      ctx = $gallery[0].getContext('2d'),
+      col = 3,
+      row = 2,
+      $base = undefined,
+      $caption = undefined,
+      $ncanvas = $gallery,
+      nwidth = width,
+      nheight = height,
+      nctx = ctx,
+      nleft = false,
+      nright = false,
+      notice_ = -1,
+      is_moving = false,
+      is_initialized = false,
+      on_left = false,
+      on_right = false;
 
   var queue = new Array(),
-    timer = undefined;
+      timer = undefined;
 
   var is_valid_index = function(index) {
       return index >= 0 && index < pages.length;
@@ -192,13 +172,17 @@ makeGallery = function($gallery, options){
     initialize = function() {
       if (!pages[index])
         return;
+      if (timer !== undefined) {
+        clearInterval(timer);
+        timer = undefined;
+      }
       timer = setInterval(function() {
         if (pages[index].is_complete()) {
           is_initialized = true;
-          draw(0,0);
           clearInterval(timer);
           timer = undefined;
         }
+        draw(0,0);
       }, 25);
     },
     notice = function() {
@@ -231,8 +215,9 @@ makeGallery = function($gallery, options){
       ctx.clearRect(0,0,width,height);
       nctx.clearRect(0,0,nwidth,nheight);
 
-      if (pages[index])
-        pages[index].draw(ctx, x + width*0.1, y);
+      if (pages[index]) {
+        pages[index].draw(ctx, x + width*0.1, y, width*0.8, height);
+      }
 
       if (x < 0 && pages[index+1])
         pages[index+1].draw(ctx, x+width*1.1, y);
@@ -368,9 +353,6 @@ makeGallery = function($gallery, options){
       if ($gallery == $ncanvas) {
         nwidth = width;
         nheight = height;
-      }
-      for (var i = 0; i < pages.length; i++) {
-        pages[i].set_size(width*0.8, height);
       }
     };
 
@@ -508,7 +490,6 @@ makeGallery = function($gallery, options){
         var item = makeItem(src, alt);
         if (pages.length == 0 || !pages[pages.length-1].add(item)) {
           var page = makePage(col, row);
-          page.set_size(width*0.8, height);
           page.add(item);
           pages.push(page);
         }
