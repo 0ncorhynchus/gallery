@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="./js/gallery2.js"></script>
+    <script>
+$(function() {
+    var $base = $("#gallery_base");
+    var img_list = [
+        ["img/mugi.jpg", "MUGI"],
+        ["http://www.nao-inoue.net/images/ass.jpg", "ASS"],
+        ["img/mugi.jpg", "MUGI"],
+        ["img/invalid.jpg", "INVALID"],
+        ["img/mugi.jpg", "MUGI"],
+        ["img/mugi.jpg", "MUGI"],
+        ["img/mugi.jpg", "MUGI"],
+        ["img/mugi.jpg", "MUGI"],
+        ["http://www.nao-inoue.net/images/ass.jpg", "ASS"],
+        ["img/mugi.jpg", "MUGI"]
+    ];
+    //var gallery = make_gallery($base, img_list);
+    var gallery = make_gallery($base, []);
+    add_images(gallery, img_list);
+
+    setTimeout(function() {
+      shift_page(gallery, 1, 500);
+    }, 1000);
+
+});
+    </script>
+    <style>
+body {
+  position: absolute;
+  width:  100%;
+  height: 100%;
+  margin: 0px;
+}
+
+#gallery_base {
+  position: absolute;
+  width:  80%;
+  height: 80%;
+  left: 10%;
+  top: 10%;
+  overflow: hidden;
+  /* overflow-x: scroll; */
+}
+    </style>
+  </head>
+  <body>
+    <div id="gallery_base"/>
+  </body>
+</html>
