@@ -89,9 +89,9 @@ var makePage = function(col, row) {
     ih = 0;
 
   var is_inside = function(i, j) {
-      var rect = (i >= 0 && i < col && j >= 0 && j < row),
-        index = (i + j * col < items.length);
-      return rect && index;
+      var in_bound = (i >= 0 && i < col && j >= 0 && j < row),
+          is_valid_index = (i + j * col < items.length);
+      return in_bound && is_valid_index;
     };
 
   var that = {
@@ -101,7 +101,9 @@ var makePage = function(col, row) {
         items.push(item);
         return true;
       },
-      draw: function(ctx, x, y, width, height) {
+      draw: function(ctx, x, y, w, h) {
+        width = w;
+        height = h;
         var iw = Math.floor(width / col),
             ih = Math.floor(height / row);
         for (var i = 0; i < items.length; i++) {
@@ -112,7 +114,7 @@ var makePage = function(col, row) {
       },
       click: function(x, y) {
         var i = Math.floor(x * col / width),
-          j = Math.floor(y * row / height);
+            j = Math.floor(y * row / height);
         if (is_inside(i, j)) {
           var ix = x - i * width / col,
             iy = y - j * height / row,
