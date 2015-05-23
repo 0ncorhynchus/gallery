@@ -1,8 +1,8 @@
 var makeItem = function(src, caption) {
   var img = new Image(),
-    width = 0,
-    height = 0,
-    rectangle = undefined;
+      width = 0,
+      height = 0,
+      rectangle = undefined;
 
   var origin_width = function() {
     if (typeof img.naturalWidth !== 'undefined')
@@ -83,10 +83,10 @@ var makeItem = function(src, caption) {
 
 var makePage = function(col, row) {
   var items = [],
-    width = 0,
-    height = 0,
-    iw = 0,
-    ih = 0;
+      width = 0,
+      height = 0,
+      iw = 0,
+      ih = 0;
 
   var is_inside = function(i, j) {
       var in_bound = (i >= 0 && i < col && j >= 0 && j < row),
@@ -117,8 +117,8 @@ var makePage = function(col, row) {
             j = Math.floor(y * row / height);
         if (is_inside(i, j)) {
           var ix = x - i * width / col,
-            iy = y - j * height / row,
-            index = i + col * j;
+              iy = y - j * height / row,
+              index = i + col * j;
           if (items[index].click(ix, iy))
             return index;
         }
@@ -265,8 +265,8 @@ makeGallery = function($gallery, options){
     },
     draw_left_arrow = function(ctx,x,y,w,h,flg) {
       var cx = w * 0.05,
-        cy = h * 0.5,
-        d = 5;
+          cy = h * 0.5,
+          d = 5;
       ctx.lineWidth = 2.0;
       if (flg){
         d = 10;
@@ -281,8 +281,8 @@ makeGallery = function($gallery, options){
     },
     draw_right_arrow = function(ctx,x,y,w,h,flg) {
       var cx = w * 0.95,
-        cy = h * 0.5,
-        d = 5;
+          cy = h * 0.5,
+          d = 5;
       ctx.lineWidth = 2.0;
       if (flg) {
         d = 10;
@@ -301,9 +301,9 @@ makeGallery = function($gallery, options){
         return;
       }
       var x = 0,
-        dx = 0,
-        y = 0,
-        interval = index - to;
+          dx = 0,
+          y = 0,
+          interval = index - to;
       is_moving = true;
 
       for (var i = 0; i < 20; i++) {
@@ -381,7 +381,7 @@ makeGallery = function($gallery, options){
           notice_ = -1;
         } else {
           var x = e.pageX - $gallery.offset().left,
-            y = e.pageY - $gallery.offset().top;
+              y = e.pageY - $gallery.offset().top;
           var i = pages[index].click(x-width*0.1, y);
           if (i !== undefined) {
             notice_ = i;
@@ -524,7 +524,7 @@ makeGallery = function($gallery, options){
 
   $('img',$gallery).each(function() {
     var src = $(this).attr('src'),
-      alt = $(this).attr('alt');
+        alt = $(this).attr('alt');
     that.add(src, alt);
   });
 
