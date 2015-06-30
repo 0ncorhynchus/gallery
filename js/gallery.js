@@ -47,7 +47,14 @@ var makeItem = function(src, caption) {
         width = w;
         height = h;
         var dw, dh;
-        if (width * origin_height() < height * origin_width()) {
+        var width_ratio = width * 0.9 / origin_width();
+        var height_ratio = height * 0.9 / origin_height();
+        console.log(width_ratio);
+        console.log(height_ratio);
+        if (width_ratio >= 1 && height_ratio >= 1) {
+          dw = origin_width();
+          dh = origin_height();
+        } else if (width_ratio < height_ratio) {
           dw = width * 0.9;
           dh = origin_height() * dw / origin_width();
         } else {
