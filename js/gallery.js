@@ -257,8 +257,8 @@ makeGallery = function($gallery, options){
         $ncanvas.show();
       nctx.fillStyle = "rgba(30, 30, 30, 0.9)";
       nctx.fillRect(x, y, nwidth, nheight);
-      n.draw(nctx,nwidth*0.1,0,
-          nwidth*0.8,nheight-100);
+      var edge = Math.min(nwidth*0.8, nheight-100);
+      n.draw(nctx,(nwidth-edge)/2,0,edge,edge);
       if ($caption !== undefined) {
         $caption.html(n.get_caption());
         $caption.show();
