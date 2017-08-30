@@ -49,8 +49,6 @@ var makeItem = function(src, caption) {
         var dw, dh;
         var width_ratio = width * 0.9 / origin_width();
         var height_ratio = height * 0.9 / origin_height();
-        console.log(width_ratio);
-        console.log(height_ratio);
         if (width_ratio >= 1 && height_ratio >= 1) {
           dw = origin_width();
           dh = origin_height();
@@ -258,7 +256,7 @@ makeGallery = function($gallery, options){
       nctx.fillStyle = "rgba(30, 30, 30, 0.9)";
       nctx.fillRect(x, y, nwidth, nheight);
       var edge = Math.min(nwidth*0.8, nheight-100);
-      n.draw(nctx,(nwidth-edge)/2,0,edge,edge);
+      n.draw(nctx,(nwidth-edge)/2,(nheight-edge)/2,edge,edge);
       if ($caption !== undefined) {
         $caption.html(n.get_caption());
         $caption.show();
